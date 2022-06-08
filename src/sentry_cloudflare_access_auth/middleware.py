@@ -11,6 +11,7 @@ from django.http import HttpResponse
 from django.contrib.auth import authenticate, login
 from django.shortcuts import redirect
 from sentry.web.helpers import render_to_response
+from django.utils.deprecation import MiddlewareMixin
 
 from sentry_cloudflare_access_auth.backend import MultipleUsersMatchingEmailException, UserIsNotActiveException, UserNotFoundException
 
@@ -22,12 +23,12 @@ static_resources_extension = ["js", "css", "png", "jpg", "jpeg", "woff", "ttf"]
 cf_sentry_logout_cookie_name = "cf_sentry_logout"
 cf_sentry_default_flow_cookie_name = "cf_sentry_default_flow"
 
-class CloudflareAccessAuthMiddleware:
+class CloudflareAccessAuthMiddleware(MiddlewareMixin):
     _certs_url = "https://{}/cdn-cgi/access/certs".format(settings.CLOUDFLARE_ACCESS_AUTH_DOMAIN)
 
 
     def __init__(self, get_response=None):
-        self.get_response = get_response
+        super().__init__(get_response)
         logger.info("CloudflareAccessAuthMiddleware initialized")
         logger.info("Certificates URL: %s", self._certs_url)
 
