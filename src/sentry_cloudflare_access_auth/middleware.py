@@ -148,7 +148,7 @@ class CloudflareAccessAuthMiddleware(MiddlewareMixin):
         error_messages = set()
         for key in keys:
             try:
-                t = jwt.decode(token, key=key, audience=settings.CLOUDFLARE_ACCESS_POLICY_AUD)
+                t = jwt.decode(token, key=key, audience=settings.CLOUDFLARE_ACCESS_POLICY_AUD, algorithms=["RS256"])
                 logger.debug("Token payload:")
                 logger.debug(t)
                 return t
